@@ -1,2 +1,2 @@
-# halloween
-This project refers to the Spooky Author Identification task in Kaggle (see: https://www.kaggle.com/c/spooky-author-identification)
+# Halloween
+This project refers to the Spooky Author Identification task in [Kaggle](https://www.kaggle.com/c/spooky-author-identification).
