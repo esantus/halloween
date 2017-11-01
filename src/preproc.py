@@ -2,10 +2,27 @@
 import nltk # the natural langauage toolkit, open-source NLP
 import pandas as pd # dataframes
 
+from nltk.corpus import stopwords # list of stopwords
+from nltk.stem import WordNetLemmatizer # lemmatizer
+
+
+### Import all stopwords for English and initiate the lemmatizer
+
+stopwords = stopwords.words('english')
+with open("../datasets/stopwords-en.txt", "r") as stpw:
+    for word in stpw:
+        stopwords.append(word.strip())
+
+stopwords = set(stopwords)
+
+wordnet_lemmatizer = WordNetLemmatizer()
+
+#print stopwords
+
 ### Read in the data
 
 # read our data into a dataframe
-texts = pd.read_csv("train.csv")
+texts = pd.read_csv("../datasets/train.csv")
 
 # look at the first few rows
 print(texts.head())
@@ -36,6 +53,17 @@ for name, group in byAuthor:
     # split the text into individual tokens    
     tokens = nltk.tokenize.word_tokenize(sentences.decode("utf-8"))
 
+    print type(tokens)
+
+    # lemmatize the text
+    new_tokens = []
+
+    for token in tokens:
+        if token not in stopwords and token not in ["n't", "though", "never", "ever", "even", "however", "us", "one", "yet", "\'", "could", "would", "``", "?", "'s", "\'\'", ".", ",", ":", "!", ";", ")", "(", ",", "[", "]", "{", "}", "#", "###", "##", "|", "*", "@card@", "..", "..."]:
+            new_tokens.append(wordnet_lemmatizer.lemmatize(token))
+    
+    tokens = new_tokens
+
     # calculate the frequency of each token
     frequency = nltk.FreqDist(tokens)
 
@@ -45,10 +73,19 @@ for name, group in byAuthor:
 # now we have an dictionary where each entry is the frequency distribution
 # of words for a specific author.     
 
-# see how often each author says "blood"
+# save the frequencies in a list for every author and sort them
+wordFreqDistrByAuthor = {}
+
 for author in wordFreqByAuthor.keys():
-    print("Author is: " + author)
+
+    wordFreqDistrByAuthor[author] = []
+
     for word in wordFreqByAuthor[author]:
-        print("Word ", word, " is ", wordFreqByAuthor[author].freq(word))
+        wordFreqDistrByAuthor[author].append([word, wordFreqByAuthor[author].freq(word)])
+
+    wordFreqDistrByAuthor[author] = sorted(wordFreqDistrByAuthor[author], key=lambda x: x[1], reverse=True)
+
+    print(author, wordFreqDistrByAuthor[author][:15])
+    print("\n\n")
 
 
