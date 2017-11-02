@@ -9,7 +9,7 @@ from nltk.stem import WordNetLemmatizer # lemmatizer
 ### Import all stopwords for English and initiate the lemmatizer
 
 stopwords = stopwords.words('english')
-with open("../datasets/stopwords-en.txt", "r") as stpw:
+with open("../datasets/stopwords-en.txt", "r", encoding='UTF8') as stpw:
     for word in stpw:
         stopwords.append(word.strip())
 
@@ -44,16 +44,16 @@ for name, group in byAuthor:
     # single long string
     sentences = group['text'].str.cat(sep = ' ')
     
-    print "Sentences for ", name, " are ", sentences.decode("utf-8")[:100]
+    print("Sentences for ", name, " are ", sentences[:100])
 
     # convert everything to lower case (so "The" and "the" get counted as 
     # the same word rather than two different words)
     sentences = sentences.lower()
     
     # split the text into individual tokens    
-    tokens = nltk.tokenize.word_tokenize(sentences.decode("utf-8"))
+    tokens = nltk.tokenize.word_tokenize(sentences)
 
-    print type(tokens)
+    print(type(tokens))
 
     # lemmatize the text
     new_tokens = []
